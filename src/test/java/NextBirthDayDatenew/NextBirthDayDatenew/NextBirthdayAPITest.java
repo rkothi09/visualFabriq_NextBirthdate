@@ -63,8 +63,7 @@ public class NextBirthdayAPITest {
     public void testValidInputHour() {
         String dateOfBirth = "1990-10-30";
         String unit = "hour";
-        String expectedMessage = "hours left";
-        testValidInput(dateOfBirth, unit, expectedMessage);
+        testValidInput(dateOfBirth, unit);
     }
 
     @Test(priority=1)
@@ -72,7 +71,7 @@ public class NextBirthdayAPITest {
         String dateOfBirth = "1990-10-30";
         String unit = "day";
         String expectedMessage = "days left";
-        testValidInput(dateOfBirth, unit, expectedMessage);
+        testValidInput(dateOfBirth, unit);
     }
 
     @Test(priority=2)
@@ -80,7 +79,7 @@ public class NextBirthdayAPITest {
         String dateOfBirth = "1990-10-30";
         String unit = "week";
         String expectedMessage = "weeks left";
-        testValidInput(dateOfBirth, unit, expectedMessage);
+        testValidInput(dateOfBirth, unit);
     }
 
     @Test(priority=3)
@@ -88,16 +87,18 @@ public class NextBirthdayAPITest {
         String dateOfBirth = "1990-10-30";
         String unit = "month";
         String expectedMessage = "months left";
-        testValidInput(dateOfBirth, unit, expectedMessage);
+        testValidInput(dateOfBirth, unit);
     }
 
-    private void testValidInput(String dateOfBirth, String unit, String expectedMessage) {
+    private void testValidInput(String dateOfBirth, String unit) 
+    {
         driver.get("https://lx8ssktxx9.execute-api.eu-west-1.amazonaws.com/Prod/next-birthday?dateofbirth="
                 + dateOfBirth + "&unit=" + unit);
         WebElement messageElement = driver.findElement(By.tagName("body"));
         String message = messageElement.getText();
         // Add assertion to verify the response message
-        Assert.assertTrue(message.contains(expectedMessage));
+        String timeRemaining = NextBirthdayCalculator.getTimeUntilNextBirthday(dateOfBirth, unit);
+        Assert.assertTrue(message.contains(timeRemaining));
     }
 
     @Test(priority=4)
@@ -154,7 +155,8 @@ public class NextBirthdayAPITest {
         WebElement messageElement = driver.findElement(By.tagName("body"));
         String message = messageElement.getText();
         // Add assertion to verify the response message
-        Assert.assertTrue(message.contains("0 hours left"));
+        String timeRemaining = NextBirthdayCalculator.getTimeUntilNextBirthday(dateOfBirth, unit);
+        Assert.assertTrue(message.contains(timeRemaining));
     }
 
     @Test(priority=9)
